@@ -1,13 +1,21 @@
 import { useState } from 'react';
 import AuthInput from '../components/auth/AuthInput';
-import Image from 'next/image';
+import { IconeAtencao } from "../components/icons"
+import useAuth from '../data/hook/useAuth'
 
 export default function Autenticacao() {
 
+	const { usuario, loginGoogle } = useAuth();
+
 	const [modo, setModo] = useState("login");
-	const [erro, setErro] = useState('');
+	const [erro, setErro] = useState(null);
 	const [email, setEmail] = useState('')
 	const [senha, setSenha] = useState('')
+
+	function exibirErro(msg, tempo = 5) {
+		setErro(msg)
+		setTimeout(() => setErro(null), tempo * 1000)
+	}
 
 	async function submeter() {
 		try {
@@ -24,18 +32,16 @@ export default function Autenticacao() {
 	return (
 		<div className="flex h-screen items-center justify-center">
 			<div className="hidden md:block md:w-1/2 lg:w-2/3">
-				<Image
+				<img
 					src="https://source.unsplash.com/random"
 					alt="Imagem da Tela de Autenticação"
-					width={100} height="100vh"
-					sizes={"100vw"}
-					layout={"fixed"}
-					objectFit={"cover"} />
+					className='h-screen w-full object-cover' />
 			</div>
 			<div className="m-10 w-full md:w-1/2 lg:w-1/3">
 				<h1 className={`text-3xl font-bold mb-5`}>
 					{modo === 'login' ? 'Entre com a Sua Conta' : 'Cadastre-se na Plataforma'}
 				</h1>
+
 				{erro ? (
 					<div className={`
                         flex items-center
@@ -71,7 +77,7 @@ export default function Autenticacao() {
 
 				<hr className="my-6 border-gray-300 w-full" />
 
-				<button onClick={() => { }} className={`
+				<button onClick={() => loginGoogle()} className={`
 				w-full bg-red-500 hover:bg-red-400
 				text-white rounded-lg px-4 py-3
 			`}>
